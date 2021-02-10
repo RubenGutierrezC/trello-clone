@@ -7,7 +7,6 @@ import { ColumnContainer, ColumnTitle } from "../styles";
 import { isHidden } from "../utils/isHidden";
 import AddNewItem from "./AddNewItem";
 import Card from "./Card";
-import CustomDragLayer from "./CustomDragLayer";
 
 interface ColumnProps {
   text: string;
@@ -53,7 +52,6 @@ export default function Column({
       ref={ref}
       isHidden={isHidden(isPreview, state.draggedItem, "COLUMN", id)}
     >
-      {/* <CustomDragLayer /> */}
       <ColumnTitle>{text}</ColumnTitle>
       {
         state.lists[index].tasks.map((task) => (

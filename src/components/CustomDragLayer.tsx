@@ -29,11 +29,8 @@ export default function CustomDragLayer() {
     })
   )
 
-  if (!isDragging) {
-    return null
-  }
 
-  return (
+  return isDragging ? (
     <CustomDragLayerContainer>
       <div style={getItemStyles(currentOffset)}>
         <Column
@@ -44,5 +41,5 @@ export default function CustomDragLayer() {
         />
       </div>
     </CustomDragLayerContainer>
-  )
+  ) : null
 }
