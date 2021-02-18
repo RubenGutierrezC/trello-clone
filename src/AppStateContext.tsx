@@ -1,7 +1,9 @@
 import { nanoid } from "nanoid"
-import { createContext, Dispatch, PropsWithChildren, useContext, useReducer } from "react"
+import { createContext, Dispatch, PropsWithChildren, useContext, useEffect, useReducer } from "react"
+import { save } from "./api"
 import { DragItem } from "./DragItem"
 import { findItemIndexById, insertItemAtIndex, moveItem, overrideItemAtIndex, removeItemAtIndex } from "./utils/arrayUtils"
+import { withData } from "./withData"
 
 interface Task {
   id: string;
@@ -17,27 +19,6 @@ interface List {
 export interface AppState {
   lists: List[],
   draggedItem: DragItem | undefined
-}
-
-const appData: AppState = {
-  draggedItem: undefined,
-  lists: [
-    {
-      id: "0",
-      text: "To Do",
-      tasks: []
-    },
-    {
-      id: "1",
-      text: "In Progress",
-      tasks: []
-    },
-    {
-      id: "2",
-      text: "Done",
-      tasks: []
-    }
-  ]
 }
 
 interface AppStateContextProps {
@@ -175,8 +156,12 @@ const appStateReducer = (state: AppState, action: Action): AppState => {
   }
 }
 
-export default function AppStateProvider({ children }: PropsWithChildren<{}>) {
-  const [state, dispatch] = useReducer(appStateReducer, appData)
+const AppStateProvider = withData(({ children, initialState }: PropsWithChildren<{initialState: AppState}>) => {
+  const [state, dispatch] = useReducer(appStateReducer, initialState)
+
+  useEffect(() => {
+    save(state)
+  }, [state])
 
   return (
     <AppStateContext.Provider
@@ -188,5 +173,8 @@ export default function AppStateProvider({ children }: PropsWithChildren<{}>) {
       {children}
     </AppStateContext.Provider>
   )
-}
+})
+
+export default AppStateProvider
+
 
